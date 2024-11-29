@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -38,13 +39,13 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.compose.AppTheme
 import com.example.trainymvp.R
 import com.example.trainymvp.data.Item
 import com.example.trainymvp.data.TimePreset
-import com.example.trainymvp.ui.theme.TrainyMVPTheme
 
 @Composable
-private fun WPItem(
+fun WPItem(
     item: Item,
     modifier: Modifier = Modifier
 ) {
@@ -58,7 +59,7 @@ private fun WPItem(
         Column(
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_medium)),
             modifier = Modifier
-                .padding(dimensionResource(R.dimen.padding_medium))
+                .padding(dimensionResource(R.dimen.padding_large))
                 .animateContentSize(
                     animationSpec = spring(
                         dampingRatio = Spring.DampingRatioNoBouncy,
@@ -77,13 +78,14 @@ private fun WPItem(
                     tint = Color.White,
                     contentDescription = stringResource(id = R.string.person_content_desc),
                     modifier = Modifier
+                        .size(45.dp)
                         .clip(RoundedCornerShape(percent = 50))
                         .background(color = MaterialTheme.colorScheme.primary)
                         .padding(dimensionResource(id = R.dimen.padding_small))
                 )
                 Text(
                     text = item.title,
-                    style = MaterialTheme.typography.titleLarge
+                    style = MaterialTheme.typography.headlineSmall
                 )
                 Spacer(Modifier.weight(1f))
                 WPItemButton(
@@ -124,20 +126,25 @@ fun ExpandedInformation(
     ) {
         Text(
             text = description,
-            style = MaterialTheme.typography.bodySmall,
+            style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.outline,
             maxLines = 2,
-            modifier = Modifier.widthIn(0.dp, 168.dp)
+            modifier = Modifier.widthIn(0.dp, 155.dp)
         )
         Spacer(Modifier.weight(1f))
         Button(
-            onClick = { /*TODO*/ }
+            onClick = { /*TODO*/ },
+            modifier = Modifier.size(90.dp, 45.dp)
         ) {
-            Text(text = "Start")
+            Text(
+                text = "Start",
+                style = MaterialTheme.typography.labelLarge
+            )
         }
         Spacer(Modifier.padding(dimensionResource(id = R.dimen.padding_very_small)))
         FilledTonalIconButton(
-            onClick = { /*TODO*/ }
+            onClick = { /*TODO*/ },
+            modifier = Modifier.size(45.dp)
         ) {
             Icon(
                 imageVector = Icons.Rounded.Edit,
@@ -151,7 +158,7 @@ fun ExpandedInformation(
 @Preview(showBackground = true)
 @Composable
 fun InventoryItemPreview() {
-    TrainyMVPTheme {
+    AppTheme {
         Column(
             Modifier.padding(dimensionResource(id = R.dimen.padding_large)),
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_medium))
@@ -161,21 +168,24 @@ fun InventoryItemPreview() {
                     0,
                     "Title",
                     "Lorem ipsum dolor sit amet consectetur adipiscing elit.",
-                    TimePreset(0, 45, 30),)
+                    TimePreset(0, 45, 30)
+                )
             )
             WPItem(
                 Item(
                     1,
                     "Title",
                     "Lorem ipsum dolor sit amet consectetur adipiscing elit.",
-                    TimePreset(0, 45, 30),)
+                    TimePreset(0, 45, 30)
+                )
             )
             WPItem(
                 Item(
                     2,
                     "Title",
                     "Lorem ipsum dolor sit amet consectetur adipiscing elit.",
-                    TimePreset(0, 45, 30),)
+                    TimePreset(0, 45, 30)
+                )
             )
         }
     }
