@@ -14,18 +14,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.example.trainymvp.navigation.TrainyNavHost
 
-/**
- * Top level composable that represents screens for the application.
- */
-//@Composable
-//fun InventoryApp(navController: NavHostController = rememberNavController()) {
-//    InventoryNavHost(navController = navController)
-//}
+@Composable
+fun TrainyApp(navController: NavHostController = rememberNavController()) {
+    TrainyNavHost(navController = navController)
+}
 
-/**
- * App bar to display title and conditionally display the back navigation.
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TrainyTopAppBar(

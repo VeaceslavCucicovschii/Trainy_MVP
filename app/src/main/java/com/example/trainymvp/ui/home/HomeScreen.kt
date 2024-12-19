@@ -28,12 +28,20 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.compose.AppTheme
 import com.example.trainymvp.R
 import com.example.trainymvp.TrainyTopAppBar
 import com.example.trainymvp.data.Item
 import com.example.trainymvp.data.TimePreset
+import com.example.trainymvp.navigation.NavigationDestination
 import com.example.trainymvp.ui.item.WPItem
+
+object HomeDestination : NavigationDestination {
+    override val route = "home"
+    override val titleRes = R.string.app_name
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -132,5 +140,15 @@ private fun InventoryList(
                 )
             )
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun HomeScreenPreview() {
+    AppTheme {
+        HomeScreen(
+            navigateToItemEntry = { /*TODO*/ }
+        )
     }
 }
