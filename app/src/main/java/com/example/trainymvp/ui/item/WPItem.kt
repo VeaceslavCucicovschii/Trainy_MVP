@@ -128,7 +128,7 @@ fun ExpandedInformation(
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.outline,
             maxLines = 2,
-            modifier = Modifier.widthIn(0.dp, 155.dp)
+            modifier = Modifier.widthIn(0.dp, 160.dp)
         )
         Spacer(Modifier.weight(1f))
         Button(
