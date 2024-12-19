@@ -75,17 +75,16 @@ fun WPItem(
             ) {
                 Icon(
                     imageVector = Icons.Rounded.Person,
-                    tint = Color.White,
+                    tint = MaterialTheme.colorScheme.onPrimary,
                     contentDescription = stringResource(id = R.string.person_content_desc),
                     modifier = Modifier
-                        .size(45.dp)
                         .clip(RoundedCornerShape(percent = 50))
                         .background(color = MaterialTheme.colorScheme.primary)
                         .padding(dimensionResource(id = R.dimen.padding_small))
                 )
                 Text(
                     text = item.title,
-                    style = MaterialTheme.typography.headlineSmall
+                    style = MaterialTheme.typography.titleLarge
                 )
                 Spacer(Modifier.weight(1f))
                 WPItemButton(
@@ -126,15 +125,14 @@ fun ExpandedInformation(
     ) {
         Text(
             text = description,
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.outline,
             maxLines = 2,
             modifier = Modifier.widthIn(0.dp, 155.dp)
         )
         Spacer(Modifier.weight(1f))
         Button(
-            onClick = { /*TODO*/ },
-            modifier = Modifier.size(90.dp, 45.dp)
+            onClick = { /*TODO*/ }
         ) {
             Text(
                 text = "Start",
@@ -143,8 +141,7 @@ fun ExpandedInformation(
         }
         Spacer(Modifier.padding(dimensionResource(id = R.dimen.padding_very_small)))
         FilledTonalIconButton(
-            onClick = { /*TODO*/ },
-            modifier = Modifier.size(45.dp)
+            onClick = { /*TODO*/ }
         ) {
             Icon(
                 imageVector = Icons.Rounded.Edit,
