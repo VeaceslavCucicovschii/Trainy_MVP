@@ -1,14 +1,16 @@
 package com.example.trainymvp.data
 
-//  import androidx.room.Entity
-//  import androidx.room.PrimaryKey
+import androidx.annotation.DrawableRes
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.PrimaryKey
 
 /**
  * Entity data class represents a single row in the database.
  */
-//  @Entity(tableName = "item")
+@Entity(tableName = "items")
 data class Item(
-//    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val title: String,
     val description: String,
