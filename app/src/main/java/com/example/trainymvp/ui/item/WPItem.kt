@@ -164,24 +164,21 @@ fun InventoryItemPreview() {
                 Item(
                     0,
                     "Title",
-                    "Lorem ipsum dolor sit amet consectetur adipiscing elit.",
-                    TimePreset(0, 45, 30)
+                    "Lorem ipsum dolor sit amet consectetur adipiscing elit."
                 )
             )
             WPItem(
                 Item(
                     1,
                     "Title",
-                    "Lorem ipsum dolor sit amet consectetur adipiscing elit.",
-                    TimePreset(0, 45, 30)
+                    "Lorem ipsum dolor sit amet consectetur adipiscing elit."
                 )
             )
             WPItem(
                 Item(
                     2,
                     "Title",
-                    "Lorem ipsum dolor sit amet consectetur adipiscing elit.",
-                    TimePreset(0, 45, 30)
+                    "Lorem ipsum dolor sit amet consectetur adipiscing elit."
                 )
             )
         }

@@ -136,7 +136,6 @@ private fun InventoryList(
                     1,
                     "Title",
                     "Lorem ipsum dolor sit amet consectetur adipiscing elit.",
-                    TimePreset(0, 45, 30)
                 )
             )
         }

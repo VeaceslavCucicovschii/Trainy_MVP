@@ -17,5 +17,5 @@ data class Item(
 //    @DrawableRes
 //    val icon: Int,
 //    @ForeignKey(entity = TimePreset)
-    val TimePreset: TimePreset
+//    val TimePreset: TimePreset
 )
