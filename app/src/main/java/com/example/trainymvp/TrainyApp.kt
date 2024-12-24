@@ -18,11 +18,17 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.trainymvp.navigation.TrainyNavHost
 
+/**
+ * Top level composable that represents screens for the application.
+ */
 @Composable
 fun TrainyApp(navController: NavHostController = rememberNavController()) {
     TrainyNavHost(navController = navController)
 }
 
+/**
+ * App bar to display title and conditionally display the back navigation.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TrainyTopAppBar(

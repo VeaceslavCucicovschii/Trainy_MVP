@@ -3,39 +3,38 @@ package com.example.trainymvp.ui.home
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.compose.AppTheme
 import com.example.trainymvp.R
 import com.example.trainymvp.TrainyTopAppBar
 import com.example.trainymvp.data.Item
-import com.example.trainymvp.data.TimePreset
 import com.example.trainymvp.navigation.NavigationDestination
+import com.example.trainymvp.ui.AppViewModelProvider
 import com.example.trainymvp.ui.item.WPItem
 
 object HomeDestination : NavigationDestination {
@@ -43,15 +42,17 @@ object HomeDestination : NavigationDestination {
     override val titleRes = R.string.app_name
 }
 
+/**
+ * Entry route for Home screen
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     navigateToItemEntry: () -> Unit,
-//    navigateToItemUpdate: (Int) -> Unit,
     modifier: Modifier = Modifier,
-//    viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
-//    val homeUiState by viewModel.homeUiState.collectAsState()
+    val homeUiState by viewModel.homeUiState.collectAsState()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     Scaffold(
@@ -80,7 +81,7 @@ fun HomeScreen(
         },
     ) { innerPadding ->
         HomeBody(
-//            itemList = homeUiState.itemList,
+            itemList = homeUiState.itemList,
             modifier = modifier.fillMaxSize(),
             contentPadding = innerPadding,
         )
@@ -89,7 +90,7 @@ fun HomeScreen(
 
 @Composable
 private fun HomeBody(
-//    itemList: List<Item>,
+    itemList: List<Item>,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
@@ -97,31 +98,26 @@ private fun HomeBody(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier,
     ) {
-//        if (itemList.isEmpty()) {
-//            Text(
-//                text = stringResource(R.string.no_item_description),
-//                textAlign = TextAlign.Center,
-//                style = MaterialTheme.typography.titleLarge,
-//                modifier = Modifier.padding(contentPadding),
-//            )
-//        } else {
-//            InventoryList(
-//                itemList = itemList,
-//                onItemClick = { onItemClick(it.id) },
-//                contentPadding = contentPadding,
-//                modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_small))
-//            )
-//        }
-        InventoryList(
-            contentPadding = contentPadding,
-            modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_large))
-        )
+        if (itemList.isEmpty()) {
+            Text(
+                text = stringResource(R.string.no_item_description),
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(contentPadding),
+            )
+        } else {
+            InventoryList(
+                itemList = itemList,
+                contentPadding = contentPadding,
+                modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_large))
+            )
+        }
     }
 }
 
 @Composable
 private fun InventoryList(
-//    itemList: List<Item>,
+    itemList: List<Item>,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier
 ) {
@@ -130,14 +126,8 @@ private fun InventoryList(
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_medium)),
         contentPadding = contentPadding
     ) {
-        items(3) { index ->
-            WPItem(
-                Item(
-                    1,
-                    "Title",
-                    "Lorem ipsum dolor sit amet consectetur adipiscing elit.",
-                )
-            )
+        items(items = itemList, key = { it.id }) { item ->
+            WPItem(item = item)
         }
     }
 }
@@ -146,8 +136,24 @@ private fun InventoryList(
 @Composable
 fun HomeScreenPreview() {
     AppTheme {
-        HomeScreen(
-            navigateToItemEntry = { /*TODO*/ }
+        HomeBody(
+            listOf(
+                Item(
+                    0,
+                    "Title",
+                    "Lorem ipsum dolor sit amet consectetur adipiscing elit."
+                ),
+                Item(
+                    1,
+                    "Title",
+                    "Lorem ipsum dolor sit amet consectetur adipiscing elit."
+                ),
+                Item(
+                    2,
+                    "Title",
+                    "Lorem ipsum dolor sit amet consectetur adipiscing elit."
+                )
+            ),
         )
     }
 }
