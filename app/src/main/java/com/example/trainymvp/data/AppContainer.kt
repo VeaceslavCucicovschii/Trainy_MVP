@@ -7,6 +7,7 @@ import android.content.Context
  */
 interface AppContainer {
     val itemsRepository: ItemsRepository
+    val exerciseImageRepository: ExerciseImageRepository
 }
 
 /**
@@ -18,5 +19,12 @@ class AppDataContainer(private val context: Context) : AppContainer {
      */
     override val itemsRepository: ItemsRepository by lazy {
         OfflineItemsRepository(TrainyDatabase.getDatabase(context).itemDao())
+    }
+
+    /**
+     * Implementation for [ExerciseImageRepository]
+     */
+    override val exerciseImageRepository: ExerciseImageRepository by lazy {
+        OfflineExerciseImageRepository(TrainyDatabase.getDatabase(context).exerciseImageDao())
     }
 }

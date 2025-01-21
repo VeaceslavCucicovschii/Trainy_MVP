@@ -8,9 +8,10 @@ import androidx.room.RoomDatabase
 /**
  * Database class with a singleton Instance object.
  */
-@Database(entities = [Item::class], version = 1, exportSchema = false)
+@Database(entities = [Item::class, ExerciseImage::class], version = 1, exportSchema = false)
 abstract class TrainyDatabase : RoomDatabase() {
     abstract fun itemDao(): ItemDao
+    abstract fun exerciseImageDao(): ExerciseImageDao
 
     companion object {
         @Volatile

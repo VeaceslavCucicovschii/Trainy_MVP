@@ -2,8 +2,11 @@
     <string name="app_name">Trainy MVP</string>
     <string name="expand_button_content_description">expand content button</string>
     <string name="person_content_desc">person icon</string>
-    <string name="item_entry_title">add workout program</string>
     <string name="no_item_description">Oops! No workout program in the inventory.</string>
     <string name="back_button">Back</string>
-    <string name="homeScreenTitle">Workout Progs</string>
+    <string name="home_screen_title">Workout Progs</string>
+    <string name="wp_entry_title">Create a Workout Prog</string>
+    <string name="create_action">Create</string>
+    <string name="wp_title_req">Title</string>
+    <string name="wp_description_req">Description</string>
 </resources>

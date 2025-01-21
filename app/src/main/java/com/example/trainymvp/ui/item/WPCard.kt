@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -42,10 +41,9 @@ import androidx.compose.ui.unit.dp
 import com.example.compose.AppTheme
 import com.example.trainymvp.R
 import com.example.trainymvp.data.Item
-import com.example.trainymvp.data.TimePreset
 
 @Composable
-fun WPItem(
+fun WPCard(
     item: Item,
     modifier: Modifier = Modifier
 ) {
@@ -160,21 +158,21 @@ fun InventoryItemPreview() {
             Modifier.padding(dimensionResource(id = R.dimen.padding_large)),
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_medium))
         ) {
-            WPItem(
+            WPCard(
                 Item(
                     0,
                     "Title",
                     "Lorem ipsum dolor sit amet consectetur adipiscing elit."
                 )
             )
-            WPItem(
+            WPCard(
                 Item(
                     1,
                     "Title",
                     "Lorem ipsum dolor sit amet consectetur adipiscing elit."
                 )
             )
-            WPItem(
+            WPCard(
                 Item(
                     2,
                     "Title",

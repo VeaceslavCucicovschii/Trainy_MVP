@@ -7,6 +7,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.trainymvp.TrainyApplication
 import com.example.trainymvp.ui.home.HomeViewModel
+import com.example.trainymvp.ui.item.WPEntryViewModel
 
 /**
  * Provides Factory to create instance of ViewModel for the entire Inventory app
@@ -16,6 +17,11 @@ object AppViewModelProvider {
         // Initializer for HomeViewModel
         initializer {
             HomeViewModel(trainyApplication().container.itemsRepository)
+        }
+
+        // Initializer for WPEntryViewModel
+        initializer {
+            WPEntryViewModel(trainyApplication().container.itemsRepository)
         }
     }
 }

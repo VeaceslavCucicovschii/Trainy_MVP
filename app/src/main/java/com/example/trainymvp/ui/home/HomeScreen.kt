@@ -35,7 +35,7 @@ import com.example.trainymvp.TrainyTopAppBar
 import com.example.trainymvp.data.Item
 import com.example.trainymvp.navigation.NavigationDestination
 import com.example.trainymvp.ui.AppViewModelProvider
-import com.example.trainymvp.ui.item.WPItem
+import com.example.trainymvp.ui.item.WPCard
 
 object HomeDestination : NavigationDestination {
     override val route = "home"
@@ -48,7 +48,7 @@ object HomeDestination : NavigationDestination {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    navigateToItemEntry: () -> Unit,
+    navigateToWPEntry: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
@@ -59,14 +59,14 @@ fun HomeScreen(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TrainyTopAppBar(
-                title = stringResource(R.string.homeScreenTitle),
+                title = stringResource(R.string.home_screen_title),
                 canNavigateBack = false,
                 scrollBehavior = scrollBehavior
             )
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = navigateToItemEntry,
+                onClick = navigateToWPEntry,
                 shape = MaterialTheme.shapes.large,
                 modifier = Modifier
                     .padding(dimensionResource(id = R.dimen.padding_medium))
@@ -74,7 +74,7 @@ fun HomeScreen(
             ) {
                 Icon(
                     imageVector = Icons.Rounded.Add,
-                    contentDescription = stringResource(R.string.item_entry_title),
+                    contentDescription = stringResource(R.string.wp_entry_title),
                     modifier = Modifier.size(30.dp)
                 )
             }
@@ -126,8 +126,8 @@ private fun InventoryList(
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_medium)),
         contentPadding = contentPadding
     ) {
-        items(items = itemList, key = { it.id }) { item ->
-            WPItem(item = item)
+        items(items = itemList, key = { it.itemId }) { item ->
+            WPCard(item = item)
         }
     }
 }

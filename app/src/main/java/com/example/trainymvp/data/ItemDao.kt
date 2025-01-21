@@ -13,7 +13,7 @@ interface ItemDao {
     @Query("SELECT * from items ORDER BY title ASC")
     fun getAllItems(): Flow<List<Item>>
 
-    @Query("SELECT * from items WHERE id = :id")
+    @Query("SELECT * from items WHERE item_id = :id")
     fun getItem(id: Int): Flow<Item>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

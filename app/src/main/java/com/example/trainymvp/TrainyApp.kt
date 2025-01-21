@@ -42,7 +42,7 @@ fun TrainyTopAppBar(
         title = {
             Text(
                 text = title,
-                style = MaterialTheme.typography.headlineMedium
+                style = MaterialTheme.typography.titleLarge
             )
         },
         modifier = modifier.padding(vertical = dimensionResource(id = R.dimen.padding_medium)),
