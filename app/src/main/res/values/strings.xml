@@ -9,4 +9,5 @@
     <string name="create_action">Create</string>
     <string name="wp_title_req">Title</string>
     <string name="wp_description_req">Description</string>
+    <string name="add_exercise_image">Add exercise image</string>
 </resources>

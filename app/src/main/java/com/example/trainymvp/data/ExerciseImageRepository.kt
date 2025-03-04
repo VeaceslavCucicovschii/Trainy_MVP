@@ -8,4 +8,5 @@ interface ExerciseImageRepository {
     suspend fun insertExerciseImage(exerciseImage: ExerciseImage)
     suspend fun deleteExerciseImage(exerciseImage: ExerciseImage)
     suspend fun updateExerciseImage(exerciseImage: ExerciseImage)
+    fun getWorkoutProgram(): Flow<List<WorkoutProgram>>
 }

@@ -1,9 +1,11 @@
 package com.example.trainymvp.data
 
 import androidx.room.ColumnInfo
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import androidx.room.Relation
 
 @Entity(
     tableName = "exercise_image",
@@ -21,8 +23,17 @@ data class ExerciseImage(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "exercise_image_id")
     val exerciseImageId: Int = 0,
-    val path: String,
+    val imageData: ByteArray,
     val order: Int,
     @ColumnInfo(name = "item_id")
     val itemId: Int
+)
+
+data class WorkoutProgram(
+    @Embedded val item: Item,
+    @Relation(
+        parentColumn = "item_id",
+        entityColumn = "exercise_image_id"
+    )
+    val workoutProgram: List<ExerciseImage>
 )

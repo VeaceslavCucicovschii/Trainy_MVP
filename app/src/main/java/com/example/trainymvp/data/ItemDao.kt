@@ -10,10 +10,10 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ItemDao {
-    @Query("SELECT * from items ORDER BY title ASC")
+    @Query("SELECT * FROM items ORDER BY title ASC")
     fun getAllItems(): Flow<List<Item>>
 
-    @Query("SELECT * from items WHERE item_id = :id")
+    @Query("SELECT * FROM items WHERE item_id = :id")
     fun getItem(id: Int): Flow<Item>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

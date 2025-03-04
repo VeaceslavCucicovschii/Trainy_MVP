@@ -1,8 +1,14 @@
 package com.example.trainymvp.ui.item
 
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.core.os.registerForAllProfilingResults
 import androidx.lifecycle.ViewModel
 import com.example.trainymvp.data.Item
 import com.example.trainymvp.data.ItemsRepository
@@ -36,6 +42,10 @@ class WPEntryViewModel(private val itemsRepository: ItemsRepository) : ViewModel
         if (validateInput()) {
             itemsRepository.insertItem(itemUiState.itemDetails.toItem())
         }
+    }
+
+    fun pickImages() {
+
     }
 }
 

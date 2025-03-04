@@ -2,7 +2,6 @@ package com.example.trainymvp.ui.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -82,8 +81,10 @@ fun HomeScreen(
     ) { innerPadding ->
         HomeBody(
             itemList = homeUiState.itemList,
-            modifier = modifier.fillMaxSize(),
-            contentPadding = innerPadding,
+            modifier = modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+            // contentPadding = innerPadding,
         )
     }
 }
@@ -92,7 +93,7 @@ fun HomeScreen(
 private fun HomeBody(
     itemList: List<Item>,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
+    // contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -103,12 +104,12 @@ private fun HomeBody(
                 text = stringResource(R.string.no_item_description),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(contentPadding),
+                // modifier = Modifier.padding(contentPadding),
             )
         } else {
             InventoryList(
                 itemList = itemList,
-                contentPadding = contentPadding,
+                // contentPadding = contentPadding,
                 modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_large))
             )
         }
@@ -118,13 +119,13 @@ private fun HomeBody(
 @Composable
 private fun InventoryList(
     itemList: List<Item>,
-    contentPadding: PaddingValues,
+    // contentPadding: PaddingValues,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_medium)),
-        contentPadding = contentPadding
+        // contentPadding = contentPadding
     ) {
         items(items = itemList, key = { it.itemId }) { item ->
             WPCard(item = item)

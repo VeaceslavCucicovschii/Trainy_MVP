@@ -5,15 +5,16 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ExerciseImageDao {
-    @Query("SELECT * from exercise_image ORDER BY item_id ASC")
+    @Query("SELECT * FROM exercise_image ORDER BY item_id ASC")
     fun getAllExerciseImage(): Flow<List<ExerciseImage>>
 
-    @Query("SELECT * from exercise_image WHERE exercise_image_id = :id")
+    @Query("SELECT * FROM exercise_image WHERE exercise_image_id = :id")
     fun getExerciseImage(id: Int): Flow<ExerciseImage>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
@@ -24,4 +25,8 @@ interface ExerciseImageDao {
 
     @Delete
     suspend fun delete(exerciseImage: ExerciseImage)
+
+    @Transaction
+    @Query("SELECT * FROM items")
+    fun getWorkoutProgram(): Flow<List<WorkoutProgram>>
 }
