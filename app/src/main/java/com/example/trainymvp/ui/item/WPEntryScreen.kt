@@ -1,10 +1,10 @@
 package com.example.trainymvp.ui.item
 
+import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.calculateEndPadding
@@ -14,13 +14,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.AddCircle
-import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -33,7 +29,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -72,7 +67,9 @@ fun WPEntryScreen(
     ) { innerPadding ->
         ItemEntryBody(
             itemUiState = viewModel.itemUiState,
-            onItemValueChange = viewModel::updateUiState,
+            imagesUiState = viewModel.imagesUiState,
+            onItemValueChange = viewModel::updateItemUiState,
+            onImagesValueChange = viewModel::updateImagesUiState,
             onSaveClick = {
                 // Note: If the user rotates the screen very fast, the operation may get cancelled
                 // and the item may not be saved in the Database. This is because when config
@@ -80,6 +77,7 @@ fun WPEntryScreen(
                 // be cancelled - since the scope is bound to composition.
                 coroutineScope.launch {
                     viewModel.saveItem()
+                    // viewModel.saveImages()
                     navigateBack()
                 }
             },
@@ -99,7 +97,9 @@ fun WPEntryScreen(
 @Composable
 fun ItemEntryBody(
     itemUiState: ItemUiState,
+    imagesUiState: ImagesUiState,
     onItemValueChange: (ItemDetails) -> Unit,
+    onImagesValueChange: (List<@JvmSuppressWildcards Uri>) -> Unit,
     onSaveClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -109,7 +109,9 @@ fun ItemEntryBody(
     ) {
         ItemInputForm(
             itemDetails = itemUiState.itemDetails,
-            onValueChange = onItemValueChange,
+            imagesList = imagesUiState.images,
+            onItemValueChange = onItemValueChange,
+            onImagesValueChange = onImagesValueChange,
             modifier = Modifier.fillMaxWidth()
         )
         Button(
@@ -126,8 +128,44 @@ fun ItemEntryBody(
 @Composable
 fun ItemInputForm(
     itemDetails: ItemDetails,
-    onValueChange: (ItemDetails) -> Unit = {},
+    imagesList: List<@JvmSuppressWildcards Uri>,
+    onItemValueChange: (ItemDetails) -> Unit = {},
+    onImagesValueChange: (List<@JvmSuppressWildcards Uri>) -> Unit = {},
+
     enabled: Boolean = true,
+    modifier: Modifier = Modifier
+) {
+    Column (
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_large))
+    ) {
+        OutlinedTextField(
+            value = itemDetails.title,
+            onValueChange = { onItemValueChange(itemDetails.copy(title = it)) },
+            label = { Text(stringResource(R.string.wp_title_req)) },
+            modifier = Modifier.fillMaxWidth(),
+            enabled = enabled,
+            singleLine = true
+        )
+        OutlinedTextField(
+            value = itemDetails.description,
+            onValueChange = { onItemValueChange(itemDetails.copy(description = it)) },
+            label = { Text(stringResource(R.string.wp_description_req)) },
+            modifier = Modifier.fillMaxWidth(),
+            enabled = enabled,
+            singleLine = false
+        )
+        ImageInputForm(
+            imagesList = imagesList,
+            onValueChange = onImagesValueChange
+        )
+    }
+}
+
+@Composable
+fun ImageInputForm(
+    imagesList: List<@JvmSuppressWildcards Uri>,
+    onValueChange: (List<@JvmSuppressWildcards Uri>) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     // Registers a photo picker activity launcher in multi-select mode.
@@ -136,53 +174,30 @@ fun ItemInputForm(
     ) { uris ->
         // Callback is invoked after the user selects media items or closes the photo picker.
         if (uris.isNotEmpty()) {
-            Log.d("PhotoPicker", "Number of items selected: ${uris.size}")
-        } else {
-            Log.d("PhotoPicker", "No media selected")
+            onValueChange(uris)
         }
     }
-
-    Column (
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_large))
-    ) {
-        OutlinedTextField(
-            value = itemDetails.title,
-            onValueChange = { onValueChange(itemDetails.copy(title = it)) },
-            label = { Text(stringResource(R.string.wp_title_req)) },
-            modifier = Modifier.fillMaxWidth(),
-            enabled = enabled,
-            singleLine = true
-        )
-        OutlinedTextField(
-            value = itemDetails.description,
-            onValueChange = { onValueChange(itemDetails.copy(description = it)) },
-            label = { Text(stringResource(R.string.wp_description_req)) },
-            modifier = Modifier.fillMaxWidth(),
-            enabled = enabled,
-            singleLine = false
-        )
-        Button(
-            onClick = {
-                pickMultipleImages.launch(
-                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                )
-            },
-            colors = ButtonDefaults.buttonColors(
-                contentColor = Color.Gray,
-                containerColor = MaterialTheme.colorScheme.surfaceDim
-            ),
-            shape = MaterialTheme.shapes.extraLarge,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(205.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Rounded.Add,
-                contentDescription = stringResource(id = R.string.add_exercise_image),
-                modifier = Modifier.size(80.dp)
+    
+    Button(
+        onClick = {
+            pickMultipleImages.launch(
+                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
             )
-        }
+        },
+        colors = ButtonDefaults.buttonColors(
+            contentColor = Color.Gray,
+            containerColor = MaterialTheme.colorScheme.surfaceDim
+        ),
+        shape = MaterialTheme.shapes.extraLarge,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(205.dp)
+    ) {
+        Icon(
+            imageVector = Icons.Rounded.Add,
+            contentDescription = stringResource(id = R.string.add_exercise_image),
+            modifier = Modifier.size(80.dp)
+        )
     }
 }
 
@@ -196,7 +211,8 @@ fun WPEntryScreenPreview() {
                 "",
                 ""
             ),
-            onValueChange = {}
+            imagesList = mutableListOf(),
+
         )
     }
 }
