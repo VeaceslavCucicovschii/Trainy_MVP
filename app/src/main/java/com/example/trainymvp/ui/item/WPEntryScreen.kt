@@ -5,23 +5,29 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -30,10 +36,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -107,7 +115,7 @@ fun ItemEntryBody(
     itemUiState: ItemUiState,
     imagesUiState: ImagesUiState,
     onItemValueChange: (ItemDetails) -> Unit,
-    onImagesValueChange: (List<@JvmSuppressWildcards Uri>) -> Unit,
+    onImagesValueChange: (MutableList<@JvmSuppressWildcards Uri>) -> Unit,
     onSaveClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -136,9 +144,9 @@ fun ItemEntryBody(
 @Composable
 fun ItemInputForm(
     itemDetails: ItemDetails,
-    imagesList: List<@JvmSuppressWildcards Uri>,
+    imagesList: MutableList<@JvmSuppressWildcards Uri> = mutableListOf(),
     onItemValueChange: (ItemDetails) -> Unit = {},
-    onImagesValueChange: (List<@JvmSuppressWildcards Uri>) -> Unit = {},
+    onImagesValueChange: (MutableList<@JvmSuppressWildcards Uri>) -> Unit = {},
 
     enabled: Boolean = true,
     modifier: Modifier = Modifier
@@ -172,8 +180,8 @@ fun ItemInputForm(
 
 @Composable
 fun ImageInputForm(
-    imagesList: List<@JvmSuppressWildcards Uri>,
-    onValueChange: (List<@JvmSuppressWildcards Uri>) -> Unit = {},
+    imagesList: MutableList<@JvmSuppressWildcards Uri>,
+    onValueChange: (MutableList<@JvmSuppressWildcards Uri>) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     // Registers a photo picker activity launcher in multi-select mode.
@@ -182,18 +190,16 @@ fun ImageInputForm(
     ) { uris ->
         // Callback is invoked after the user selects media items or closes the photo picker.
         if (uris.isNotEmpty()) {
-            onValueChange(uris)
+            onValueChange(uris.toMutableList())
         }
     }
 
     LazyVerticalGrid(
-        columns = GridCells.Fixed(2)
+        columns = GridCells.Fixed(2),
+        modifier = modifier.heightIn(max = 4000.dp)
     ) {
-        items(imagesList) { imageUri ->
-            Image(
-                painter = rememberAsyncImagePainter(imageUri),
-                contentDescription = null
-            )
+        itemsIndexed(imagesList) { index, _ ->
+            ImageContainer(index, imagesList)
         }
     }
     
@@ -220,6 +226,40 @@ fun ImageInputForm(
     }
 }
 
+@Composable
+fun ImageContainer(
+    index: Int,
+    imagesList: MutableList<@JvmSuppressWildcards Uri>,
+    modifier: Modifier = Modifier
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Box(
+        modifier = Modifier
+    ) {
+        Image(
+            painter = rememberAsyncImagePainter(imagesList[index]),
+            contentDescription = null,
+            modifier.clickable { expanded = !expanded }
+        )
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            DropdownMenuItem(
+                text = { Text("Change") },
+                onClick = { /* TODO */ }
+            )
+            DropdownMenuItem(
+                text = { Text("Remove") },
+                onClick = {
+                    imagesList.removeAt(index)
+                }
+            )
+        }
+    }
+}
+
 @Preview
 @Composable
 fun WPEntryScreenPreview() {
@@ -230,8 +270,6 @@ fun WPEntryScreenPreview() {
                 "",
                 ""
             ),
-            imagesList = mutableListOf(),
-
         )
     }
 }

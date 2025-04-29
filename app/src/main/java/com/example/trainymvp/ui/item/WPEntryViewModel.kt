@@ -30,9 +30,11 @@ class WPEntryViewModel(private val itemsRepository: ItemsRepository) : ViewModel
             ItemUiState(itemDetails = itemDetails, isEntryValid = validateInput(itemDetails))
     }
 
-    fun updateImagesUiState(images: List<@JvmSuppressWildcards Uri>) {
+    fun updateImagesUiState(imagesToAdd: MutableList<@JvmSuppressWildcards Uri>) {
+        imagesToAdd.addAll(imagesUiState.images)
+
         imagesUiState =
-            ImagesUiState(images = images)
+            ImagesUiState(images = imagesToAdd)
     }
 
     private fun validateInput(uiState: ItemDetails = itemUiState.itemDetails): Boolean {
@@ -111,7 +113,7 @@ fun Item.toItemDetails(): ItemDetails = ItemDetails(
  */
 
 data class ImagesUiState(
-    val images: List<@JvmSuppressWildcards Uri> = mutableListOf(),
+    val images: MutableList<@JvmSuppressWildcards Uri> = mutableListOf(),
     val isEntryValid: Boolean = false
 )
 
