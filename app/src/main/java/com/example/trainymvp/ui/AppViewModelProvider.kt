@@ -21,7 +21,7 @@ object AppViewModelProvider {
 
         // Initializer for WPEntryViewModel
         initializer {
-            WPEntryViewModel(trainyApplication().container.itemsRepository)
+            WPEntryViewModel(trainyApplication().container.itemsRepository, trainyApplication().container.exerciseImageRepository)
         }
     }
 }

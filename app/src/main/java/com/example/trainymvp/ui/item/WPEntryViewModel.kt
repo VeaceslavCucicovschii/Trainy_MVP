@@ -2,16 +2,18 @@ package com.example.trainymvp.ui.item
 
 import android.content.Context
 import android.net.Uri
+import android.util.MutableByte
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.room.ColumnInfo
 import com.example.trainymvp.data.ExerciseImage
+import com.example.trainymvp.data.ExerciseImageRepository
 import com.example.trainymvp.data.Item
 import com.example.trainymvp.data.ItemsRepository
+import kotlin.jvm.Throws
 
-class WPEntryViewModel(private val itemsRepository: ItemsRepository) : ViewModel() {
+class WPEntryViewModel(private val itemsRepository: ItemsRepository, private val exerciseImageRepository: ExerciseImageRepository) : ViewModel() {
     /**
      * Holds current item ui state
      */
@@ -27,7 +29,7 @@ class WPEntryViewModel(private val itemsRepository: ItemsRepository) : ViewModel
      */
     fun updateItemUiState(itemDetails: ItemDetails) {
         itemUiState =
-            ItemUiState(itemDetails = itemDetails, isEntryValid = validateInput(itemDetails))
+            ItemUiState(itemDetails = itemDetails, isEntryValid = validateItemInput(itemDetails))
     }
 
     fun updateImagesUiState(imagesToAdd: MutableList<@JvmSuppressWildcards Uri>) {
@@ -37,33 +39,35 @@ class WPEntryViewModel(private val itemsRepository: ItemsRepository) : ViewModel
             ImagesUiState(images = imagesToAdd)
     }
 
-    private fun validateInput(uiState: ItemDetails = itemUiState.itemDetails): Boolean {
+    private fun validateItemInput(uiState: ItemDetails = itemUiState.itemDetails): Boolean {
         return with(uiState) {
             title.isNotBlank() && description.isNotBlank()
         }
     }
 
+//    private fun validateImageInput(uiState: MutableList<@JvmSuppressWildcards Uri> = imagesUiState.images): Boolean {
+//        return with(uiState){
+//
+//        }
+//    }
+
     /**
      * Inserts an [Item] in the Room database
      */
     suspend fun saveItem() {
-        if (validateInput()) {
-            itemsRepository.insertItem(itemUiState.itemDetails.toItem())
+        if (validateItemInput()) {
+            itemsRepository.insertItem(
+                itemUiState.itemDetails.toItem()
+            )
         }
     }
 
-    fun convertUrisToBytes(context: Context, uris: List<@JvmSuppressWildcards Uri>): List<ByteArray?> {
-        var imageBytesList: List<ByteArray?> = mutableListOf()
-
-        uris.forEach() { element ->
-            val imageBytes = context.contentResolver.openInputStream(element)?.use {
-                it.readBytes()
-            }
-
-            imageBytesList += imageBytes
+    suspend fun saveImages(context: Context) {
+        imagesUiState.images.forEachIndexed { index, _ ->
+            exerciseImageRepository.insertExerciseImage(
+                imagesUiState.toImageDetailes(context = context, index = index, itemId = itemUiState.itemDetails.id).toExerciseImage()
+            )
         }
-
-        return imageBytesList
     }
 }
 
@@ -134,3 +138,27 @@ fun ImageDetailes.toExerciseImage(): ExerciseImage = ExerciseImage(
     order = order,
     itemId = itemId
 )
+
+/**
+ * Extension function to convert image from [ImageUiState] with index [index] to [ImageDetailes]
+ */
+
+fun ImagesUiState.toImageDetailes(index: Int, itemId: Int, context: Context): ImageDetailes {
+    return ImageDetailes(
+        id = 0,
+        imageData = convertUriToByte(context = context, images[index]),
+        order = index,
+        itemId = itemId
+    )
+}
+
+fun convertUriToByte(context: Context, uri: @JvmSuppressWildcards Uri): ByteArray {
+    val imageBytes = context.contentResolver.openInputStream(uri)?.use {
+        it.readBytes()
+    }
+
+    if(imageBytes != null)
+        return imageBytes
+    else
+        return ByteArray(0)
+}

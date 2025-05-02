@@ -44,6 +44,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -71,7 +72,9 @@ fun WPEntryScreen(
     canNavigateBack: Boolean = true,
     viewModel: WPEntryViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
+    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
+
     Scaffold(
         topBar = {
             TrainyTopAppBar(
@@ -93,7 +96,7 @@ fun WPEntryScreen(
                 // be cancelled - since the scope is bound to composition.
                 coroutineScope.launch {
                     viewModel.saveItem()
-                    // viewModel.saveImages()
+                    viewModel.saveImages(context)
                     navigateBack()
                 }
             },
