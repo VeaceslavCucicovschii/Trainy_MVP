@@ -11,6 +11,7 @@ import com.example.trainymvp.data.ExerciseImage
 import com.example.trainymvp.data.ExerciseImageRepository
 import com.example.trainymvp.data.Item
 import com.example.trainymvp.data.ItemsRepository
+import kotlinx.coroutines.flow.map
 import kotlin.jvm.Throws
 
 class WPEntryViewModel(private val itemsRepository: ItemsRepository, private val exerciseImageRepository: ExerciseImageRepository) : ViewModel() {
@@ -45,12 +46,6 @@ class WPEntryViewModel(private val itemsRepository: ItemsRepository, private val
         }
     }
 
-//    private fun validateImageInput(uiState: MutableList<@JvmSuppressWildcards Uri> = imagesUiState.images): Boolean {
-//        return with(uiState){
-//
-//        }
-//    }
-
     /**
      * Inserts an [Item] in the Room database
      */
@@ -63,6 +58,11 @@ class WPEntryViewModel(private val itemsRepository: ItemsRepository, private val
     }
 
     suspend fun saveImages(context: Context) {
+        itemsRepository.getItemStreamByTitle(itemUiState.itemDetails.title)
+            .map { it!!.toItemUiState() }
+
+        print(itemUiState.itemDetails.id)
+
         imagesUiState.images.forEachIndexed { index, _ ->
             exerciseImageRepository.insertExerciseImage(
                 imagesUiState.toImageDetailes(context = context, index = index, itemId = itemUiState.itemDetails.id).toExerciseImage()
@@ -156,9 +156,5 @@ fun convertUriToByte(context: Context, uri: @JvmSuppressWildcards Uri): ByteArra
     val imageBytes = context.contentResolver.openInputStream(uri)?.use {
         it.readBytes()
     }
-
-    if(imageBytes != null)
-        return imageBytes
-    else
-        return ByteArray(0)
+    return imageBytes!!
 }

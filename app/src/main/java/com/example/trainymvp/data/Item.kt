@@ -2,12 +2,13 @@ package com.example.trainymvp.data
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 /**
  * Entity data class represents a single row in the database.
  */
-@Entity(tableName = "items")
+@Entity(tableName = "items", indices = [Index(value = ["title"], unique = true)])
 data class Item(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "item_id")
