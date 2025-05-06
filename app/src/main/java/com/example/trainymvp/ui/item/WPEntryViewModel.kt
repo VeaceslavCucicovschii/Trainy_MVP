@@ -2,6 +2,7 @@ package com.example.trainymvp.ui.item
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import android.util.MutableByte
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -11,8 +12,10 @@ import com.example.trainymvp.data.ExerciseImage
 import com.example.trainymvp.data.ExerciseImageRepository
 import com.example.trainymvp.data.Item
 import com.example.trainymvp.data.ItemsRepository
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlin.jvm.Throws
+import kotlin.math.log
 
 class WPEntryViewModel(private val itemsRepository: ItemsRepository, private val exerciseImageRepository: ExerciseImageRepository) : ViewModel() {
     /**
@@ -49,24 +52,26 @@ class WPEntryViewModel(private val itemsRepository: ItemsRepository, private val
     /**
      * Inserts an [Item] in the Room database
      */
-    suspend fun saveItem() {
+    suspend fun saveItem(context: Context) {
         if (validateItemInput()) {
             itemsRepository.insertItem(
                 itemUiState.itemDetails.toItem()
             )
         }
-    }
 
-    suspend fun saveImages(context: Context) {
+        var currentId = 0
         itemsRepository.getItemStreamByTitle(itemUiState.itemDetails.title)
-            .map { it!!.toItemUiState() }
+            .collect {
+                currentId = it!!.toItemUiState().itemDetails.id
+            }
 
-        print(itemUiState.itemDetails.id)
-
-        imagesUiState.images.forEachIndexed { index, _ ->
-            exerciseImageRepository.insertExerciseImage(
-                imagesUiState.toImageDetailes(context = context, index = index, itemId = itemUiState.itemDetails.id).toExerciseImage()
-            )
+        if (imagesUiState.images.isNotEmpty()) {
+            imagesUiState.images.forEachIndexed { index, _ ->
+                Log.d("Image", "index = ${index}, currentId = ${currentId}")
+                exerciseImageRepository.insertExerciseImage(
+                    imagesUiState.toImageDetailes(context = context, index = index, itemId = currentId).toExerciseImage()
+                )
+            }
         }
     }
 }
@@ -117,8 +122,7 @@ fun Item.toItemDetails(): ItemDetails = ItemDetails(
  */
 
 data class ImagesUiState(
-    val images: MutableList<@JvmSuppressWildcards Uri> = mutableListOf(),
-    val isEntryValid: Boolean = false
+    val images: MutableList<@JvmSuppressWildcards Uri> = mutableListOf()
 )
 
 data class ImageDetailes(
@@ -156,5 +160,6 @@ fun convertUriToByte(context: Context, uri: @JvmSuppressWildcards Uri): ByteArra
     val imageBytes = context.contentResolver.openInputStream(uri)?.use {
         it.readBytes()
     }
+    Log.d("Image", "imageBytes = ${imageBytes}")
     return imageBytes!!
 }
