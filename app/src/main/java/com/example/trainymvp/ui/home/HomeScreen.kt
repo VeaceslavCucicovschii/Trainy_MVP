@@ -3,7 +3,6 @@ package com.example.trainymvp.ui.home
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -26,10 +25,8 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.compose.AppTheme
 import com.example.trainymvp.R
 import com.example.trainymvp.TrainyTopAppBar
 import com.example.trainymvp.data.Item
@@ -48,6 +45,7 @@ object HomeDestination : NavigationDestination {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
+    navigateToWPEdit: (Int) -> Unit,
     navigateToWPEntry: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
@@ -82,6 +80,7 @@ fun HomeScreen(
     ) { innerPadding ->
         HomeBody(
             itemList = homeUiState.itemList,
+            navigateToWPEdit = navigateToWPEdit,
             modifier = modifier
                 .fillMaxSize()
                 .padding(innerPadding)
@@ -93,6 +92,7 @@ fun HomeScreen(
 @Composable
 private fun HomeBody(
     itemList: List<Item>,
+    navigateToWPEdit: (Int) -> Unit,
     modifier: Modifier = Modifier,
     // contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
@@ -110,6 +110,7 @@ private fun HomeBody(
         } else {
             InventoryList(
                 itemList = itemList,
+                navigateToWPEdit = { navigateToWPEdit(it.itemId) },
                 // contentPadding = contentPadding,
                 modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_large))
             )
@@ -120,6 +121,7 @@ private fun HomeBody(
 @Composable
 private fun InventoryList(
     itemList: List<Item>,
+    navigateToWPEdit: (Item) -> Unit,
     // contentPadding: PaddingValues,
     modifier: Modifier = Modifier
 ) {
@@ -129,33 +131,10 @@ private fun InventoryList(
         // contentPadding = contentPadding
     ) {
         items(items = itemList, key = { it.itemId }) { item ->
-            WPCard(item = item)
+            WPCard(
+                navigateToWPEdit = { navigateToWPEdit(item) },
+                item = item
+            )
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun HomeScreenPreview() {
-    AppTheme {
-        HomeBody(
-            listOf(
-                Item(
-                    0,
-                    "Title",
-                    "Lorem ipsum dolor sit amet consectetur adipiscing elit."
-                ),
-                Item(
-                    1,
-                    "Title",
-                    "Lorem ipsum dolor sit amet consectetur adipiscing elit."
-                ),
-                Item(
-                    2,
-                    "Title",
-                    "Lorem ipsum dolor sit amet consectetur adipiscing elit."
-                )
-            ),
-        )
     }
 }

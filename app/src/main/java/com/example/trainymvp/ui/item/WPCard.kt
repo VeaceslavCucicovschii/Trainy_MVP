@@ -36,15 +36,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.compose.AppTheme
 import com.example.trainymvp.R
 import com.example.trainymvp.data.Item
 
 @Composable
 fun WPCard(
     item: Item,
+    navigateToWPEdit: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -91,7 +90,8 @@ fun WPCard(
             }
             if (expanded) {
                 ExpandedInformation(
-                    description = item.description
+                    description = item.description,
+                    navigateToWPEdit = navigateToWPEdit,
                 )
             }
         }
@@ -113,6 +113,7 @@ fun WPItemButton(
 
 @Composable
 fun ExpandedInformation(
+    navigateToWPEdit: () -> Unit,
     description: String,
     modifier: Modifier = Modifier
 ) {
@@ -139,45 +140,12 @@ fun ExpandedInformation(
         }
         Spacer(Modifier.padding(dimensionResource(id = R.dimen.padding_very_small)))
         FilledTonalIconButton(
-            onClick = { /*TODO*/ }
+            onClick = navigateToWPEdit
         ) {
             Icon(
                 imageVector = Icons.Rounded.Edit,
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 contentDescription = stringResource(id = R.string.person_content_desc)
-            )
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun InventoryItemPreview() {
-    AppTheme {
-        Column(
-            Modifier.padding(dimensionResource(id = R.dimen.padding_large)),
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_medium))
-        ) {
-            WPCard(
-                Item(
-                    0,
-                    "Title",
-                    "Lorem ipsum dolor sit amet consectetur adipiscing elit."
-                )
-            )
-            WPCard(
-                Item(
-                    1,
-                    "Title",
-                    "Lorem ipsum dolor sit amet consectetur adipiscing elit."
-                )
-            )
-            WPCard(
-                Item(
-                    2,
-                    "Title",
-                    "Lorem ipsum dolor sit amet consectetur adipiscing elit."
-                )
             )
         }
     }
