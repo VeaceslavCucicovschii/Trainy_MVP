@@ -16,6 +16,8 @@ import com.example.trainymvp.data.ItemsRepository
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import android.util.Base64
+import kotlinx.coroutines.flow.Flow
 
 class WPEditViewModel(
     savedStateHandle: SavedStateHandle,
@@ -39,6 +41,12 @@ class WPEditViewModel(
                 .filterNotNull()
                 .first()
                 .toItemUiState(true)
+        }
+
+        viewModelScope.launch {
+            imagesUiState = exerciseImageRepository.getExerciseImageByItemId(itemId)
+                .filterNotNull()
+                .toImageUiState()
         }
     }
 
@@ -89,4 +97,13 @@ class WPEditViewModel(
             }
         }
     }
+}
+
+suspend fun Flow<List<ExerciseImage>>.toImageUiState(): ImagesUiState {
+    val images = this.first().map { exerciseImage ->
+        val base64 = Base64.encodeToString(exerciseImage.imageData, Base64.DEFAULT)
+        Uri.parse("data:image/jpeg;base64,$base64")
+    }.toMutableList()
+
+    return ImagesUiState(images)
 }

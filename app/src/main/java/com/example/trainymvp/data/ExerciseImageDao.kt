@@ -17,6 +17,9 @@ interface ExerciseImageDao {
     @Query("SELECT * FROM exercise_image WHERE exercise_image_id = :id")
     fun getExerciseImage(id: Int): Flow<ExerciseImage>
 
+    @Query("SELECT * FROM exercise_image WHERE item_id = :id")
+    fun getExerciseImageByItemId(id: Int) : Flow<List<ExerciseImage>>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(exerciseImage: ExerciseImage)
 

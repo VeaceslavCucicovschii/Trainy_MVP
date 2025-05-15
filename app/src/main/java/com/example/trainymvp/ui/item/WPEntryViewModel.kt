@@ -11,6 +11,7 @@ import com.example.trainymvp.data.ExerciseImage
 import com.example.trainymvp.data.ExerciseImageRepository
 import com.example.trainymvp.data.Item
 import com.example.trainymvp.data.ItemsRepository
+import kotlinx.coroutines.flow.first
 
 class WPEntryViewModel(private val itemsRepository: ItemsRepository, private val exerciseImageRepository: ExerciseImageRepository) : ViewModel() {
     /**
@@ -54,11 +55,12 @@ class WPEntryViewModel(private val itemsRepository: ItemsRepository, private val
             )
         }
 
-        var currentId = 0
-        itemsRepository.getItemStreamByTitle(itemUiState.itemDetails.title)
-            .collect {
-                currentId = it!!.toItemUiState().itemDetails.id
-            }
+        val currentId = itemsRepository
+            .getItemStreamByTitle(itemUiState.itemDetails.title)
+            .first()!!
+            .toItemUiState()
+            .itemDetails
+            .id
 
         if (imagesUiState.images.isNotEmpty()) {
             imagesUiState.images.forEachIndexed { index, _ ->
@@ -92,7 +94,8 @@ data class ItemDetails(
 fun ItemDetails.toItem(): Item = Item(
     itemId = id,
     title = title,
-    description = description
+    description = description,
+    icon = TODO()
 )
 
 /**
@@ -144,7 +147,6 @@ fun ImageDetailes.toExerciseImage(): ExerciseImage = ExerciseImage(
 
 fun ImagesUiState.toImageDetailes(index: Int, itemId: Int, context: Context): ImageDetailes {
     return ImageDetailes(
-        id = 0,
         imageData = convertUriToByte(context = context, images[index]),
         order = index,
         itemId = itemId

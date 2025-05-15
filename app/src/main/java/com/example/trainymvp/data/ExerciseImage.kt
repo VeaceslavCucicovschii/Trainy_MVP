@@ -33,7 +33,7 @@ data class WorkoutProgram(
     @Embedded val item: Item,
     @Relation(
         parentColumn = "item_id",
-        entityColumn = "exercise_image_id"
+        entityColumn = "item_id"
     )
     val workoutProgram: List<ExerciseImage>
 )
