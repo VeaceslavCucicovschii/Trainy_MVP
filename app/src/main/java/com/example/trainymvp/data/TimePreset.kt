@@ -10,6 +10,6 @@ package com.example.trainymvp.data
 class TimePreset (
     // @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    val exerciseTimeInSeconds: Int,
-    val restTimeInSeconds: Int
+    val exerciseTimeInSeconds: Int = 45,
+    val restTimeInSeconds: Int = 25
 )

@@ -15,7 +15,7 @@ data class Item(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "item_id")
     val itemId: Int = 0,
-    val icon: Icon,
+    // val icon: Icon,
     val title: String,
     val description: String,
 )

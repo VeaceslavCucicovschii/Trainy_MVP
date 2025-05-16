@@ -7,6 +7,7 @@
     <string name="home_screen_title">Workout Progs</string>
     <string name="wp_entry_title">Create a Workout Prog</string>
     <string name="wp_edit_title">Edit a Workout Prog</string>
+    <string name="wp_start_title">Workout Program Running</string>
     <string name="create_action">Create</string>
     <string name="wp_title_req">Title</string>
     <string name="wp_description_req">Description</string>
