@@ -1,5 +1,6 @@
 package com.example.trainymvp.navigation
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -27,7 +28,10 @@ fun TrainyNavHost(
         composable(route = HomeDestination.route) {
             HomeScreen(
                 navigateToWPEntry = { navController.navigate(WPEntryDestination.route) },
-                navigateToWPEdit = { navController.navigate("${WPEditDestination.route}/${it}") }
+                navigateToWPEdit = {
+                    Log.d("Navigation", "Navigating to edit with itemId = $it")
+                    navController.navigate("${WPEditDestination.route}/${it}")
+                }
             )
         }
         composable(route = WPEntryDestination.route) {
@@ -40,7 +44,8 @@ fun TrainyNavHost(
             route = WPEditDestination.routeWithArgs,
             arguments = listOf(navArgument(WPEditDestination.itemIdArg) {
                 type = NavType.IntType
-            })) {
+            })
+        ) {
             WPEditScreen(
                 navigateBack = { navController.popBackStack() },
                 onNavigateUp = { navController.navigateUp() }

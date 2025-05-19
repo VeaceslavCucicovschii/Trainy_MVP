@@ -8,7 +8,7 @@
     <string name="wp_entry_title">Create a Workout Prog</string>
     <string name="wp_edit_title">Edit a Workout Prog</string>
     <string name="wp_start_title">Workout Program Running</string>
-    <string name="create_action">Create</string>
+    <string name="create_action">Save</string>
     <string name="wp_title_req">Title</string>
     <string name="wp_description_req">Description</string>
     <string name="add_exercise_image">Add exercise image</string>

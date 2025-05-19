@@ -94,8 +94,7 @@ data class ItemDetails(
 fun ItemDetails.toItem(): Item = Item(
     itemId = id,
     title = title,
-    description = description,
-    icon = TODO()
+    description = description
 )
 
 /**

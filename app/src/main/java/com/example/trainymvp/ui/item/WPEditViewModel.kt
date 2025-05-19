@@ -33,7 +33,9 @@ class WPEditViewModel(
     var imagesUiState by mutableStateOf(ImagesUiState())
         private set
 
-    private val itemId: Int = checkNotNull(savedStateHandle[WPEditDestination.itemIdArg])
+    val itemId: Int = checkNotNull(savedStateHandle[WPEditDestination.itemIdArg]).also {
+        Log.d("ViewModel", "Retrieved itemId = $it")
+    } as Int
 
     init {
         viewModelScope.launch {
@@ -77,7 +79,7 @@ class WPEditViewModel(
      */
     suspend fun saveItem(context: Context) {
         if (validateItemInput()) {
-            itemsRepository.insertItem(
+            itemsRepository.updateItem(
                 itemUiState.itemDetails.toItem()
             )
         }
@@ -91,7 +93,7 @@ class WPEditViewModel(
         if (imagesUiState.images.isNotEmpty()) {
             imagesUiState.images.forEachIndexed { index, _ ->
                 Log.d("Image", "index = ${index}, currentId = ${currentId}")
-                exerciseImageRepository.insertExerciseImage(
+                exerciseImageRepository.updateExerciseImage(
                     imagesUiState.toImageDetailes(context = context, index = index, itemId = currentId).toExerciseImage()
                 )
             }
