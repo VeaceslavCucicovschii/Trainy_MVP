@@ -89,9 +89,11 @@ class WPEditViewModel(
             )
         }
 
+
+
         if (imagesUiState.images.isNotEmpty()) {
+            exerciseImageRepository.resetTable(itemId)
             imagesUiState.images.forEachIndexed { index, _ ->
-                Log.d("Image", "index = ${index}, currentId = $itemId")
                 exerciseImageRepository.insertExerciseImage(
                     imagesUiState.toImageDetailes(context = context, index = index, itemId = itemId).toExerciseImage()
                 )

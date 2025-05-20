@@ -29,6 +29,9 @@ interface ExerciseImageDao {
     @Delete
     suspend fun delete(exerciseImage: ExerciseImage)
 
+    @Query("DELETE FROM exercise_image WHERE item_id = :id")
+    suspend fun resetTable(id: Int)
+
     @Transaction
     @Query("SELECT * FROM items")
     fun getWorkoutProgram(): Flow<List<WorkoutProgram>>

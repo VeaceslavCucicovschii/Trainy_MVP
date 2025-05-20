@@ -8,6 +8,7 @@ class OfflineExerciseImageRepository(private val ExerciseImageDao: ExerciseImage
     override fun getExerciseImageByItemId(id: Int): Flow<List<ExerciseImage>> = ExerciseImageDao.getExerciseImageByItemId(id)
     override suspend fun insertExerciseImage(exerciseImage: ExerciseImage) = ExerciseImageDao.insert(exerciseImage)
     override suspend fun deleteExerciseImage(exerciseImage: ExerciseImage) = ExerciseImageDao.delete(exerciseImage)
+    override suspend fun resetTable(id: Int) = ExerciseImageDao.resetTable(id)
     override suspend fun updateExerciseImage(exerciseImage: ExerciseImage) = ExerciseImageDao.update(exerciseImage)
     override fun getWorkoutProgram(): Flow<List<WorkoutProgram>> = ExerciseImageDao.getWorkoutProgram()
 }
