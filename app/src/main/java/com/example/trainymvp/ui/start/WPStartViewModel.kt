@@ -1,8 +1,10 @@
 package com.example.trainymvp.ui.start
 
+import android.app.Application
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -18,10 +20,11 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class WPStartViewModel(
+    application: Application,
     savedStateHandle: SavedStateHandle,
     private val itemsRepository: ItemsRepository,
     private val exerciseImageRepository: ExerciseImageRepository
-) : ViewModel() {
+) : AndroidViewModel(application) {
     var itemUiState by mutableStateOf(ItemUiState())
         private set
 
@@ -42,9 +45,11 @@ class WPStartViewModel(
         }
 
         viewModelScope.launch {
-            imagesUiState = exerciseImageRepository.getExerciseImageByItemId(itemId)
+            val context = getApplication<Application>().applicationContext
+            imagesUiState = exerciseImageRepository
+                .getExerciseImageByItemId(itemId)
                 .filterNotNull()
-                .toImageUiState()
+                .toImageUiState(context)
         }
     }
 

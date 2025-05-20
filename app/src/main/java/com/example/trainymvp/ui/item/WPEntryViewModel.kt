@@ -156,6 +156,6 @@ fun convertUriToByte(context: Context, uri: @JvmSuppressWildcards Uri): ByteArra
     val imageBytes = context.contentResolver.openInputStream(uri)?.use {
         it.readBytes()
     }
-    Log.d("Image", "imageBytes = ${imageBytes}")
+    Log.d("Image", "imageBytes = $imageBytes")
     return imageBytes!!
 }

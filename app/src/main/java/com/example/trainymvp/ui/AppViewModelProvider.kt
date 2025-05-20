@@ -31,16 +31,25 @@ object AppViewModelProvider {
         // Initializer for WPEditViewModel
         initializer {
             val savedStateHandle = createSavedStateHandle() // <-- this is the correct one
+            val application = this.trainyApplication()
             WPEditViewModel(
-                savedStateHandle,
-                trainyApplication().container.itemsRepository,
-                trainyApplication().container.exerciseImageRepository
+                savedStateHandle = savedStateHandle,
+                itemsRepository = trainyApplication().container.itemsRepository,
+                exerciseImageRepository = trainyApplication().container.exerciseImageRepository,
+                application = application
             )
         }
 
         // Initializer for WPStartViewModel
         initializer {
-            WPStartViewModel(SavedStateHandle(), trainyApplication().container.itemsRepository, trainyApplication().container.exerciseImageRepository)
+            val savedStateHandle = createSavedStateHandle() // <-- this is the correct one
+            val application = this.trainyApplication()
+            WPStartViewModel(
+                savedStateHandle = savedStateHandle,
+                itemsRepository = trainyApplication().container.itemsRepository,
+                exerciseImageRepository = trainyApplication().container.exerciseImageRepository,
+                application = application
+            )
         }
     }
 }

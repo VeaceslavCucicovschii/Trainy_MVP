@@ -1,5 +1,6 @@
 package com.example.trainymvp.ui.item
 
+import android.app.Application
 import android.content.Context
 import android.net.Uri
 import android.util.Log
@@ -18,12 +19,16 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import android.util.Base64
 import kotlinx.coroutines.flow.Flow
+import androidx.core.net.toUri
+import androidx.lifecycle.AndroidViewModel
+import java.io.File
 
 class WPEditViewModel(
+    application: Application,
     savedStateHandle: SavedStateHandle,
     private val itemsRepository: ItemsRepository,
     private val exerciseImageRepository: ExerciseImageRepository
-) : ViewModel() {
+) : AndroidViewModel(application) {
     /**
      * Holds current item ui state
      */
@@ -33,9 +38,7 @@ class WPEditViewModel(
     var imagesUiState by mutableStateOf(ImagesUiState())
         private set
 
-    val itemId: Int = checkNotNull(savedStateHandle[WPEditDestination.itemIdArg]).also {
-        Log.d("ViewModel", "Retrieved itemId = $it")
-    } as Int
+    val itemId: Int = checkNotNull(savedStateHandle[WPEditDestination.itemIdArg])
 
     init {
         viewModelScope.launch {
@@ -46,9 +49,11 @@ class WPEditViewModel(
         }
 
         viewModelScope.launch {
-            imagesUiState = exerciseImageRepository.getExerciseImageByItemId(itemId)
+            val context = getApplication<Application>().applicationContext
+            imagesUiState = exerciseImageRepository
+                .getExerciseImageByItemId(itemId)
                 .filterNotNull()
-                .toImageUiState()
+                .toImageUiState(context)
         }
     }
 
@@ -84,28 +89,23 @@ class WPEditViewModel(
             )
         }
 
-        var currentId = 0
-        itemsRepository.getItemStreamByTitle(itemUiState.itemDetails.title)
-            .collect {
-                currentId = it!!.toItemUiState().itemDetails.id
-            }
-
         if (imagesUiState.images.isNotEmpty()) {
             imagesUiState.images.forEachIndexed { index, _ ->
-                Log.d("Image", "index = ${index}, currentId = ${currentId}")
-                exerciseImageRepository.updateExerciseImage(
-                    imagesUiState.toImageDetailes(context = context, index = index, itemId = currentId).toExerciseImage()
+                Log.d("Image", "index = ${index}, currentId = $itemId")
+                exerciseImageRepository.insertExerciseImage(
+                    imagesUiState.toImageDetailes(context = context, index = index, itemId = itemId).toExerciseImage()
                 )
             }
         }
     }
 }
 
-suspend fun Flow<List<ExerciseImage>>.toImageUiState(): ImagesUiState {
-    val images = this.first().map { exerciseImage ->
-        val base64 = Base64.encodeToString(exerciseImage.imageData, Base64.DEFAULT)
-        Uri.parse("data:image/jpeg;base64,$base64")
+suspend fun Flow<List<ExerciseImage>>.toImageUiState(context: Context): ImagesUiState {
+    val imageUris = this.first().mapIndexed { index, exerciseImage ->
+        val file = File(context.cacheDir, "image_$index.jpg")
+        file.writeBytes(exerciseImage.imageData)
+        file.toUri() // returns a proper file:// URI
     }.toMutableList()
 
-    return ImagesUiState(images)
+    return ImagesUiState(images = imageUris)
 }
