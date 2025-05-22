@@ -3,24 +3,21 @@ package com.example.trainymvp.ui.item
 import android.app.Application
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.core.net.toUri
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.trainymvp.data.ExerciseImage
 import com.example.trainymvp.data.ExerciseImageRepository
 import com.example.trainymvp.data.Item
 import com.example.trainymvp.data.ItemsRepository
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import android.util.Base64
-import kotlinx.coroutines.flow.Flow
-import androidx.core.net.toUri
-import androidx.lifecycle.AndroidViewModel
 import java.io.File
 
 class WPEditViewModel(

@@ -145,7 +145,7 @@ fun ImageDetailes.toExerciseImage(): ExerciseImage = ExerciseImage(
 )
 
 /**
- * Extension function to convert image from [ImageUiState] with index [index] to [ImageDetailes]
+ * Extension function to convert image from [ImagesUiState] with index [index] to [ImageDetailes]
  */
 
 fun ImagesUiState.toImageDetailes(index: Int, itemId: Int, context: Context): ImageDetailes {
