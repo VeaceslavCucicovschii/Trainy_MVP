@@ -52,6 +52,7 @@ fun WPEditScreen(
             itemUiState = viewModel.itemUiState,
             imagesUiState = viewModel.imagesUiState,
             onItemValueChange = viewModel::updateItemUiState,
+            onImagesValueAdd = viewModel::addImagesToImagesUiState,
             onImagesValueChange = viewModel::updateImagesUiState,
             onSaveClick = {
                 // Note: If the user rotates the screen very fast, the operation may get cancelled
