@@ -85,7 +85,6 @@ fun WPEntryScreen(
             itemUiState = viewModel.itemUiState,
             imagesUiState = viewModel.imagesUiState,
             onItemValueChange = viewModel::updateItemUiState,
-            onImagesValueAdd = viewModel::addImagesToImagesUiState,
             onImagesValueChange = viewModel::updateImagesUiState,
 
             onSaveClick = {
@@ -116,7 +115,6 @@ fun ItemEntryBody(
     itemUiState: ItemUiState,
     imagesUiState: ImagesUiState,
     onItemValueChange: (ItemDetails) -> Unit,
-    onImagesValueAdd: (MutableList<@JvmSuppressWildcards Uri>) -> Unit,
     onImagesValueChange: (MutableList<@JvmSuppressWildcards Uri>) -> Unit,
     onSaveClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -129,7 +127,6 @@ fun ItemEntryBody(
             itemDetails = itemUiState.itemDetails,
             imagesList = imagesUiState.images,
             onItemValueChange = onItemValueChange,
-            onImagesValueAdd = onImagesValueAdd,
             onImagesValueChange = onImagesValueChange,
             modifier = Modifier.fillMaxWidth()
         )
@@ -149,7 +146,6 @@ fun ItemInputForm(
     itemDetails: ItemDetails,
     imagesList: MutableList<@JvmSuppressWildcards Uri> = mutableListOf(),
     onItemValueChange: (ItemDetails) -> Unit = {},
-    onImagesValueAdd: (MutableList<@JvmSuppressWildcards Uri>) -> Unit = {},
     onImagesValueChange: (MutableList<@JvmSuppressWildcards Uri>) -> Unit = {},
 
     enabled: Boolean = true,
@@ -177,7 +173,6 @@ fun ItemInputForm(
         )
         ImageInputForm(
             imagesList = imagesList,
-            onValueAdd = onImagesValueAdd,
             onValueChange = onImagesValueChange
         )
     }
@@ -186,7 +181,6 @@ fun ItemInputForm(
 @Composable
 fun ImageInputForm(
     imagesList: MutableList<@JvmSuppressWildcards Uri>,
-    onValueAdd: (MutableList<@JvmSuppressWildcards Uri>) -> Unit = {},
     onValueChange: (MutableList<@JvmSuppressWildcards Uri>) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
@@ -196,7 +190,9 @@ fun ImageInputForm(
     ) { uris ->
         // Callback is invoked after the user selects media items or closes the photo picker.
         if (uris.isNotEmpty()) {
-            onValueAdd(uris.toMutableList())
+            val newList = imagesList.toMutableList()
+            newList.addAll(uris.toMutableList())
+            onValueChange(newList)
         }
     }
 

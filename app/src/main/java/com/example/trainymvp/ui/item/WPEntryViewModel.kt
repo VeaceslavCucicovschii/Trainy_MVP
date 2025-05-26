@@ -32,13 +32,6 @@ class WPEntryViewModel(private val itemsRepository: ItemsRepository, private val
             ItemUiState(itemDetails = itemDetails, isEntryValid = validateItemInput(itemDetails))
     }
 
-    fun addImagesToImagesUiState(imagesToAdd: MutableList<@JvmSuppressWildcards Uri>) {
-        imagesToAdd.addAll(imagesUiState.images)
-
-        imagesUiState =
-            ImagesUiState(images = imagesToAdd)
-    }
-
     fun updateImagesUiState(images: MutableList<@JvmSuppressWildcards Uri>) {
         imagesUiState = ImagesUiState(images = images)
     }
