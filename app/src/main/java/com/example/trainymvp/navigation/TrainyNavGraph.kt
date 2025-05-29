@@ -14,6 +14,8 @@ import com.example.trainymvp.ui.home.HomeDestination
 import com.example.trainymvp.ui.home.HomeScreen
 import com.example.trainymvp.ui.item.WPEntryDestination
 import com.example.trainymvp.ui.item.WPEntryScreen
+import com.example.trainymvp.ui.start.WPStartDestination
+import com.example.trainymvp.ui.start.WPStartScreen
 
 @Composable
 fun TrainyNavHost(
@@ -28,10 +30,8 @@ fun TrainyNavHost(
         composable(route = HomeDestination.route) {
             HomeScreen(
                 navigateToWPEntry = { navController.navigate(WPEntryDestination.route) },
-                navigateToWPEdit = {
-                    Log.d("Navigation", "Navigating to edit with itemId = $it")
-                    navController.navigate("${WPEditDestination.route}/${it}")
-                }
+                navigateToWPEdit = { navController.navigate("${WPEditDestination.route}/${it}") },
+                navigateToWPStart = { navController.navigate("${WPStartDestination.route}/${it}") }
             )
         }
         composable(route = WPEntryDestination.route) {
@@ -47,6 +47,17 @@ fun TrainyNavHost(
             })
         ) {
             WPEditScreen(
+                navigateBack = { navController.popBackStack() },
+                onNavigateUp = { navController.navigateUp() }
+            )
+        }
+        composable(
+            route = WPStartDestination.routeWithArgs,
+            arguments = listOf(navArgument(WPStartDestination.itemIdArg) {
+                type = NavType.IntType
+            })
+        ) {
+            WPStartScreen(
                 navigateBack = { navController.popBackStack() },
                 onNavigateUp = { navController.navigateUp() }
             )

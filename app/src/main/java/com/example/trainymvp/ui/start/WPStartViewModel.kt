@@ -31,10 +31,7 @@ class WPStartViewModel(
     var imagesUiState by mutableStateOf(ImagesUiState())
         private set
 
-    var timerUiState by mutableStateOf(TimerUiState())
-        private set
-
-    private val itemId: Int = checkNotNull(savedStateHandle[WPEditDestination.itemIdArg])
+    val itemId: Int = checkNotNull(savedStateHandle[WPEditDestination.itemIdArg])
 
     init {
         viewModelScope.launch {
@@ -52,6 +49,9 @@ class WPStartViewModel(
                 .toImageUiState(context)
         }
     }
+
+    var timerUiState by mutableStateOf(TimerUiState())
+        private set
 
     fun resetExercise() {
         timerUiState = timerUiState.copy(timeLeft = 45, timeRest = 25, isPaused = false)

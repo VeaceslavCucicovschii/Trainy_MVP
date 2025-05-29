@@ -45,6 +45,7 @@ import com.example.trainymvp.data.Item
 fun WPCard(
     item: Item,
     navigateToWPEdit: () -> Unit,
+    navigateToWPStart: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -93,6 +94,7 @@ fun WPCard(
                 ExpandedInformation(
                     description = item.description,
                     navigateToWPEdit = navigateToWPEdit,
+                    navigateToWPStart = navigateToWPStart
                 )
             }
         }
@@ -115,6 +117,7 @@ fun WPItemButton(
 @Composable
 fun ExpandedInformation(
     navigateToWPEdit: () -> Unit,
+    navigateToWPStart: () -> Unit,
     description: String,
     modifier: Modifier = Modifier
 ) {
@@ -132,7 +135,7 @@ fun ExpandedInformation(
         )
         Spacer(Modifier.weight(1f))
         Button(
-            onClick = { /*TODO*/ }
+            onClick = navigateToWPStart
         ) {
             Text(
                 text = "Start",

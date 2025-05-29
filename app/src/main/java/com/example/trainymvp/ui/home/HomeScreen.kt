@@ -46,6 +46,7 @@ object HomeDestination : NavigationDestination {
 @Composable
 fun HomeScreen(
     navigateToWPEdit: (Int) -> Unit,
+    navigateToWPStart: (Int) -> Unit,
     navigateToWPEntry: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
@@ -81,6 +82,7 @@ fun HomeScreen(
         HomeBody(
             itemList = homeUiState.itemList,
             navigateToWPEdit = navigateToWPEdit,
+            navigateToWPStart = navigateToWPStart,
             modifier = modifier
                 .fillMaxSize()
                 .padding(innerPadding)
@@ -93,6 +95,7 @@ fun HomeScreen(
 private fun HomeBody(
     itemList: List<Item>,
     navigateToWPEdit: (Int) -> Unit,
+    navigateToWPStart: (Int) -> Unit,
     modifier: Modifier = Modifier,
     // contentPadding: PaddingValues = PaddingValues(0.dp),
 ) {
@@ -111,6 +114,7 @@ private fun HomeBody(
             InventoryList(
                 itemList = itemList,
                 navigateToWPEdit = { navigateToWPEdit(it.itemId) },
+                navigateToWPStart = { navigateToWPStart(it.itemId) },
                 // contentPadding = contentPadding,
                 modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_large))
             )
@@ -122,6 +126,7 @@ private fun HomeBody(
 private fun InventoryList(
     itemList: List<Item>,
     navigateToWPEdit: (Item) -> Unit,
+    navigateToWPStart: (Item) -> Unit,
     // contentPadding: PaddingValues,
     modifier: Modifier = Modifier
 ) {
@@ -133,6 +138,7 @@ private fun InventoryList(
         items(items = itemList, key = { it.itemId }) { item ->
             WPCard(
                 navigateToWPEdit = { navigateToWPEdit(item) },
+                navigateToWPStart = { navigateToWPStart(item) },
                 item = item
             )
         }
