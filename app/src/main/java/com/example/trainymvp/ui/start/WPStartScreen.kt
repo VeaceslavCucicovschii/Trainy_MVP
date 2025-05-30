@@ -4,31 +4,33 @@ import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.pm.ActivityInfo
-import android.widget.Button
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.itemsIndexed
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.rememberAsyncImagePainter
 import com.example.trainymvp.R
 import com.example.trainymvp.navigation.NavigationDestination
 import com.example.trainymvp.ui.AppViewModelProvider
-import com.example.trainymvp.ui.item.ImageContainer
 
 object WPStartDestination : NavigationDestination {
     override val route = "wp_start"
@@ -62,7 +64,55 @@ fun WPStartScreen(
         }
     }
 
+    Row(
+        verticalAlignment = Alignment.Bottom,
+        horizontalArrangement = Arrangement.End,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(dimensionResource(id = R.dimen.padding_extra_large))
+    ) {
+        InfoCard("70%") // TODO
+        Spacer(Modifier.padding(dimensionResource(id = R.dimen.padding_small)))
+        InfoCard("45s") // TODO
+    }
 
+    Row(
+        verticalAlignment = Alignment.Top,
+        horizontalArrangement = Arrangement.Center,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(dimensionResource(id = R.dimen.padding_extra_large))
+    ) {
+        InfoCard(
+            text = if(viewModel.timerUiState.isPaused) "Rest" else "Exercise",
+            variant = "small"
+        )
+    }
+}
+
+@Composable
+fun InfoCard(
+    text: String,
+    variant: String = "default",
+    modifier: Modifier = Modifier
+) {
+    ElevatedCard(
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 12.dp
+        ),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White
+        ),
+        shape = RoundedCornerShape(32),
+        modifier = modifier
+    ) {
+        Text(
+            text = text,
+            modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium)),
+            style = if(variant == "small") MaterialTheme.typography.titleMedium else MaterialTheme.typography.headlineMedium,
+            textAlign = TextAlign.Center
+        )
+    }
 }
 
 @Composable
