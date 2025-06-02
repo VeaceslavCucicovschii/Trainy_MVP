@@ -53,18 +53,25 @@ class WPStartViewModel(
     var timerUiState by mutableStateOf(TimerUiState())
         private set
 
-    fun resetExercise() {
-        timerUiState = timerUiState.copy(timeLeft = 45, timeRest = 25, isPaused = false)
+
+    fun nextExercise() {
+        if (timerUiState.isPaused) {
+            timerUiState.isPaused = !timerUiState.isPaused
+        }
+        else {
+            timerUiState.imageIndex += 1
+            timerUiState.isPaused = !timerUiState.isPaused
+        }
     }
 
-    fun resetWP() {
-        timerUiState = TimerUiState()
+    fun currentTimeTarget(): Int {
+        return if (timerUiState.isPaused) timerUiState.timeRest else timerUiState.timeExercise
     }
 }
 
 data class TimerUiState(
     var imageIndex: Int = 0,
-    var timeLeft: Int = 45,
+    var timeExercise: Int = 45,
     var timeRest: Int = 25,
-    var isPaused: Boolean = false
+    var isPaused: Boolean = true
 )

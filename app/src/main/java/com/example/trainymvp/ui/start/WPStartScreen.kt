@@ -31,6 +31,9 @@ import coil3.compose.rememberAsyncImagePainter
 import com.example.trainymvp.R
 import com.example.trainymvp.navigation.NavigationDestination
 import com.example.trainymvp.ui.AppViewModelProvider
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
+import kotlinx.coroutines.delay
 
 object WPStartDestination : NavigationDestination {
     override val route = "wp_start"
@@ -58,10 +61,23 @@ fun WPStartScreen(
             modifier = Modifier.fillMaxSize()
         )
     } else {
-        // Optional: show a loading placeholder or error image
-        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            CircularProgressIndicator()
+        if (images.isEmpty()) {
+            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text("No Exercises found for this WP")
+            }
         }
+        else
+            navigateBack()
+    }
+
+    var remainingTime by rememberSaveable(viewModel.currentTimeTarget()) { mutableIntStateOf(viewModel.currentTimeTarget()) }
+
+    LaunchedEffect(remainingTime) {
+        while (remainingTime > 0) {
+            delay(1000)
+            remainingTime -= 1
+        }
+        viewModel.nextExercise()
     }
 
     Row(
@@ -71,9 +87,9 @@ fun WPStartScreen(
             .fillMaxSize()
             .padding(dimensionResource(id = R.dimen.padding_extra_large))
     ) {
-        InfoCard("70%") // TODO
+        InfoCard("${(imageIndex + 1)}/${images.count()}")
         Spacer(Modifier.padding(dimensionResource(id = R.dimen.padding_small)))
-        InfoCard("45s") // TODO
+        InfoCard("${remainingTime}s")
     }
 
     Row(
